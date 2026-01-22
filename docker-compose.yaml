@@ -1,0 +1,32 @@
+services:
+  app:
+    ports:
+      - "8080:8080"
+    build: .
+    env_file: # Eu preciso do env_file por que no meu aplication properties eu tenho as variavies de ambiente definindo o banco, se eu não injetar elas aqui, o container não roda
+    # Ele injeta as variáveis no container na hora de rodar, permitindo que a app conecte ao Postgres.
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    ports:
+      - "5432:5432"
+    image: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres_data_v2:/var/lib/postgresql
+
+volumes:
+  postgres_data_v2:
+
+
+
+# FUNCIONA SEM O HEALTHCHECK
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME} -h localhost"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 5s
