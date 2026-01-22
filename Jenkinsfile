@@ -8,19 +8,13 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh '''
-                    chmod +x mvnw
-                    ./mvnw clean
-                '''
-            }
-        }
-
         stage('Scan '){
             steps{
                 withSonarQubeEnv(installationName: 'sq1'){
-                   sh './mvnw sonar:sonar'
+                   sh '''
+                         chmod +x mvnw
+                         ./mvnw clean verify -DskipTests sonar:sonar
+                   '''
                 }
             }
         }
