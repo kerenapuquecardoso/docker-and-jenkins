@@ -8,11 +8,18 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                sh '''
+                    chmod +x mvnw
+                    ./mvnw clean verify
+                '''
+            }
+        }
 
         stage('Scan '){
             steps{
                 withSonarQubeEnv(installationName: 'sq1'){
-                    sh 'chmod +x mvnw'
                     sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
                 }
             }
